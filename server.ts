@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import multer from "multer";
 import { Request, Response, NextFunction } from "express";
-import { error } from "console";
+import cors from "cors";
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -18,7 +18,7 @@ const filter = (req: Request, file: any, cb: any) => {
     if (file.mimetype.startsWith('video')) {
         cb(null, true)
     } else {
-        cb('Not an image! Please upload only videos.', 400)
+        cb('Please upload only videos.', 400)
     }
 }
 
@@ -38,6 +38,8 @@ const express = require("express");
 
 const app = express();
 app.use(express.json())
+app.use('/uploads', express.static(__dirname + "/uploads"));
+// app.use(cors())
 
 const { HOSTNAME, PORT, SECRET } = process.env;
 
@@ -59,10 +61,10 @@ const authorize = (req: Request, res: Response, next: NextFunction) => {
 app.post('/v1/login', async (req: Request, res: Response) => {
     let user = await prisma.user.findFirst({
         where: {
-            name: req.body.name
+            name: req.body.username
         }
     })
-    const valid = user?.name.toLowerCase() === req.body?.name.toLowerCase() && user?.password === req.body?.password
+    const valid = user?.name.toLowerCase() === req.body?.username.toLowerCase() && user?.password === req.body?.password
     if (user && SECRET && valid) {
         const token = jwt.sign({ id: user.id, name: user.name }, SECRET, {
             expiresIn: "2h"
