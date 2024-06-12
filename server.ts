@@ -98,5 +98,5 @@ app.get('/v1/videos', authorize, async (req: Request, res: Response) => {
 });
 
 app.listen(PORT, HOSTNAME, () => {
-    console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
+    console.log(`Server running at https://${HOSTNAME}:${PORT}/`);
 });
