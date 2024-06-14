@@ -7,7 +7,7 @@ import cors from "cors";
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, __dirname + '/uploads/');
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + (req.body.filename || file.originalname) + "." + file.mimetype.split('/')[1]);
